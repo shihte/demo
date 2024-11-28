@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羅盤 - 成為開發者</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #fff;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+        .logo img {
+            height: 60px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .logo h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: white;
+            cursor: pointer;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .contact-info {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .contact-info h3 {
+            margin-top: 0;
+        }
+        .contact-info p {
+            margin-bottom: 10px;
+        }
+        .highlight-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #333;
+            padding: 15px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #333;
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+        .sidebar.active {
+            right: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 20px;
+            margin-top: 60px;
+        }
+        .sidebar ul li {
+            margin-bottom: 20px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .context-menu-disabled {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+        .context-menu-disabled.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/" style="display: flex; align-items: center; text-decoration: none; color: white;">
+                    <img src="https://i.postimg.cc/yWjbj09y/857d2405-6e46-4f36-96b5-8d77931c3801.png" alt="羅盤 Logo">
+                    <h1>羅盤 lwopan</h1>
+                </a>
+            </div>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="sidebar">
+        <ul>
+            <li><a href="/">首頁</a></li>
+            <li><a href="/404">新增</a></li>
+            <li><a href="/404">如何使用？</a></li>
+            <li><a href="/404">聯絡我</a></li>
+            <li><a href="/404">幫我買一杯咖啡</a></li>
+            <li><a href="/how_to_codeing">成為開發人員</a></li>
+        </ul>
+    </div>
+
+    <div class="overlay"></div>
+    <div class="context-menu-disabled">禁止複製內容</div>
+
+    <div class="main-content">
+        <h2>成為開發者</h2>
+        
+        <h3>lwopan企劃初衷</h3>
+        <p>lwopan（羅盤）項目的初衷是為了重新定義教育的本質和方向。我們的目標是挑戰並最終改變現有的東方教育體系，建立一個更加公平、開放且有效的教育模式。我們相信，只有徹底重塑教育體系，才能真正釋放每個人的潛力。</p>
+        
+        <h3>我們的願景</h3>
+        <p>我們的最終目標是在教育界擁有足夠的影響力和決策權，以推動全面的教育改革。我們計劃：</p>
+        <ul>
+            <li>建立臺灣最大、最全面的解答庫，作為改革的基礎</li>
+            <li>發展創新的學習工具和平台，促進自主學習</li>
+            <li>培養批判性思維和創新能力，而不是單純的知識記憶</li>
+            <li>推動教育資源的公平分配和開放獲取</li>
+            <li>重新設計評估系統，關注個人成長而非標準化考試</li>
+        </ul>
+        
+        <h3>目前階段</h3>
+        <p>我們目前處於項目的初始階段，正在積極招募志同道合的開發者和教育工作者。雖然我們還沒有大量用戶，但我們堅信我們的願景將吸引到渴望改變的人們。我們的首要任務是建立基礎設施，開發核心功能，並制定長期策略。</p>
+        
+        <h3>為什麼加入我們？</h3>
+        <p>加入lwopan，你將有機會：</p>
+        <ul>
+            <li>參與一場改變教育本質的革命性運動</li>
+            <li>運用技術和創新思維來解決根深蒂固的教育問題</li>
+            <li>在一個充滿激情和理想的團隊中工作，共同塑造未來的教育模式</li>
+            <li>獲得寶貴的經驗，可能徹底改變你對教育和學習的看法</li>
+            <li>與充滿遠見的領導者共事，體驗高強度的工作氛圍</li>
+        </ul>
+        
+        <div class="highlight-box">
+            <p>特別提醒：我們的工作環境充滿挑戰和激情。我們的領導風格可能會讓你想起某位著名的科技巨頭。如果你能在高壓環境中保持冷靜，並有能力應對不可預測的情況，你將在這裡大放異彩。我們正在尋找那些既有才華又能適應快節奏且時常變化的工作環境的人才。</p>
+        </div>
+        
+        <h3>我們在尋找什麼樣的開發者？</h3>
+        <p>我們需要具有遠見、富有創造力且不畏挑戰的開發者。特別是以下領域的人才：</p>
+        <ul>
+            <li>前端開發（精通現代前端框架，如 React, Vue 等）</li>
+            <li>後端開發（熟悉 Node.js, Python, golang, 分佈式系統等）</li>
+            <li>數據科學家（能夠分析學習行為，優化教育內容）</li>
+            <li>AI/ML 專家（開發智能學習助手和個性化學習路徑）</li>
+            <li>教育技術專家（了解 EdTech 行業的最新趨勢和技術）</li>
+            <li>UI/UX 設計師（能夠創造直觀且吸引人的學習界面）</li>
+        </ul>
+        
+        <div class="contact-info">
+            <h3>聯絡我們</h3>
+            <p>如果你認同我們的理念，並願意為改變教育貢獻你的才智，請聯繫我們：</p>
+            <p>Discord: lwopan革新教育社群 (請發送郵件獲取邀請鏈接)</p>
+            <p>Email: S0618231@go.edu.tw</p>
+            <p>加入我們，一起重新定義教育的未來！準備好迎接挑戰了嗎？</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

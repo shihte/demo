@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羅盤 - 功能開發中</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 60px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .logo h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: white;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 1s ease;
+        }
+        .message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #555;
+        }
+        .developer-quote {
+            font-style: italic;
+            color: #666;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #333;
+            transition: right 0.3s ease;
+            z-index: 1002;
+        }
+        .sidebar.active {
+            right: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 20px;
+            margin-top: 60px;
+        }
+        .sidebar ul li {
+            margin-bottom: 20px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/" style="display: flex; align-items: center; text-decoration: none; color: white;">
+                    <img src="https://i.postimg.cc/yWjbj09y/857d2405-6e46-4f36-96b5-8d77931c3801.png" alt="羅盤 Logo">
+                    <h1>羅盤 lwopan</h1>
+                </a>
+            </div>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <ul>
+            <li><a href="/">首頁</a></li>
+            <li><a href="/404">新增</a></li>
+            <li><a href="/404">如何使用？</a></li>
+            <li><a href="/404">聯絡我</a></li>
+            <li><a href="/404">幫我買一杯咖啡</a></li>
+            <li><a href="/how_to_codeing">成為開發人員</a></li>
+        </ul>
+    </div>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="emoji">🚧</div>
+        <h2>哎呀！這個功能還在開發中</h2>
+        <div class="message">
+            <p>看來我們的開發團隊還在為這個功能加班加點呢！</p>
+            <p>別擔心，我們正在全力以赴，很快就能帶給你驚喜。</p>
+            <p>在此期間，為什麼不去探索一下我們其他酷炫的功能呢？</p>
+        </div>
+        <a href="/" class="back-button">返回首頁</a>
+        <div class="developer-quote">
+            "啊，我好像還沒把這個功能上架..." - 某位正在喝第五杯咖啡的開發者
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
