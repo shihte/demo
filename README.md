@@ -73,5 +73,8 @@ MIT License
 歡迎提交Issue與PR，請遵循開發規範。
 
 ## 聯絡方式
-- Discord: lwopan革新教育社群
-- Email: S0618231@go.edu.tw
+
+Email
+- hello.lwopan@gmail.com
+- S0618231@go.edu.tw
+- yes.hsiao@gmail.com
