@@ -4,3 +4,4 @@ error_log.txt
 go.mod
 main.go
 tixcraft.py
+password_history.json

