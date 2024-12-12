@@ -1,0 +1,6 @@
+.venv
+.DS_Store
+error_log.txt
+go.mod
+main.go
+tixcraft.py
